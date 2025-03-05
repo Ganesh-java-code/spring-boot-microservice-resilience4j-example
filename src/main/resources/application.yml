@@ -1,0 +1,20 @@
+resilience4j:
+  circuitbreaker:
+    instances:
+      sampleService:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+        eventConsumerBufferSize: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+spring.application.name:
+  spring-boot-resilience4j-example
