@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -34,8 +37,14 @@ public class CircuitBreakerRestController {
         if (usersResponse != null && usersResponse.getUsers() != null) {
             // Extract first names from the list of users and return them
             return usersResponse.getUsers().stream()
-                    .map(User::getFirstName)
-                    .toList();
+                    .map(user -> "First Name :: " + "[" +user.getFirstName() + "]" +
+                                      " Department :: " + "[" +user.getCompany().getDepartment()  + "]" +
+                                      " Role :: " + "[" + user.getRole()  + "]" +
+                                      " Address :: " + "[" + user.getAddress().getAddress()  + "]" +
+                                      " State :: "+ "[" + user.getAddress().getState()  + "]" +
+                                      " State Code :: "+ "[" + user.getAddress().getStateCode() + "]")
+                    .collect(Collectors.toList());
+
         }
 
         return List.of(); // Return an empty list if no users were found
@@ -65,6 +74,9 @@ public class CircuitBreakerRestController {
 
     public static class User {
         private String firstName; // First name of the user
+        private String role;
+        private Company company;
+        private Address address;
 
         public String getFirstName() {
             return firstName;
@@ -72,6 +84,72 @@ public class CircuitBreakerRestController {
 
         public void setFirstName(String firstName) {
             this.firstName = firstName;
+        }
+
+        public String getRole() {
+            return role;
+        }
+
+        public void setRole(String role) {
+            this.role = role;
+        }
+
+        public Company getCompany() {
+            return company;
+        }
+
+        public void setCompany(Company company) {
+            this.company = company;
+        }
+
+        public Address getAddress() {
+            return address;
+        }
+
+        public void setAddress(Address address) {
+            this.address = address;
+        }
+
+        public static class Company {
+            private String department;
+
+            public String getDepartment() {
+                return department;
+            }
+
+            public void setDepartment(String department) {
+                this.department = department;
+            }
+        }
+
+        public static class Address {
+            private String address;
+            private String state;
+            private String stateCode;
+
+            public String getAddress() {
+                return address;
+            }
+
+            public void setAddress(String address) {
+                this.address = address;
+            }
+
+            public String getState() {
+                return state;
+            }
+
+            public void setState(String state) {
+                this.state = state;
+            }
+
+            public String getStateCode() {
+                return stateCode;
+            }
+
+            public void setStateCode(String stateCode) {
+                this.stateCode = stateCode;
+            }
         }
     }
 }
